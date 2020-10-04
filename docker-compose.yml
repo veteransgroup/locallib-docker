@@ -5,6 +5,8 @@ services:
         image: postgres
         environment: 
             - POSTGRES_PASSWORD=postgres
+        volumes: 
+            - ./db_files:/var/lib/postgresql/data
     dj:
         container_name: dj
         build: .
