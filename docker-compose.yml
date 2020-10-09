@@ -2,19 +2,37 @@ version: "3"
 
 services:
     db:
+        container_name: postgres
         image: postgres
         environment: 
             - POSTGRES_PASSWORD=postgres
         volumes: 
-            - ./db_files:/var/lib/postgresql/data
+            - library_data:/var/lib/postgresql/data
     dj:
-        container_name: dj
+        container_name: django
         build: .
+        image: dj:library
         working_dir: /locallib
-        command: python manage.py runserver 0.0.0.0:80
-        ports: 
-            - "80:80"
+        command: uwsgi --ini uwsgi.ini
+        volumes: 
+            - media_data:/locallib/uploads
         depends_on:
             - db
         environment: 
             - DJANGO_SETTINGS=dev
+    ng:
+        container_name: nginx
+        build: 
+            context: .
+            dockerfile: ./Dockerfile_ng
+        ports: 
+            - "80:80"
+        volumes: 
+            - media_data:/locallib/uploads
+        depends_on: 
+            - dj
+
+volumes: 
+    library_data:
+    media_data:
+        
