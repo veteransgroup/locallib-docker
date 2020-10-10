@@ -4,6 +4,7 @@ services:
     db:
         container_name: postgres
         image: postgres
+        restart: always
         environment: 
             - POSTGRES_PASSWORD=postgres
         volumes: 
@@ -12,6 +13,7 @@ services:
         container_name: django
         build: .
         image: dj:library
+        restart: always
         working_dir: /locallib
         command: uwsgi --ini uwsgi.ini
         volumes: 
@@ -25,6 +27,7 @@ services:
         build: 
             context: .
             dockerfile: ./Dockerfile_ng
+        restart: always
         ports: 
             - "80:80"
         volumes: 
